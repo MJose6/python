@@ -1,0 +1,24 @@
+Este programa esta hecho para realizar una comparacion 
+entre variables determinando si existe o no
+una relacion entre las mismas.
+Elegimos como variables a la temperatura y las precipitaciones,
+ya que leyendo informacion climatologica llegamos a la 
+conclusion que son las que mas se relacionan entre si,
+las estaciones a comparar fueron elegidas por su notable
+diferencia de temperatura, el programa va a comparar las
+estaciones de verano e invierno en un lapso de 30 años
+desde 1991 a 2020.
+Lo que hicimos fue importar los archivos, abrirlos y 
+acceder a los datos para luego realizar los calculos
+correspondientes.
+Se recorren los datos con la utilizacion de bucles y
+condiciones, y a medida que avanza nos va mostrando
+por pantalla la impresion de los calculos, tambien se
+agregaron algunas impresiones sencillas que refrescan
+la pantalla, logrando una mejora en la visual de los
+calculos y la lectura de datos.
+La conclusion final del programa se ve reflejada en pantalla
+y nos dice que a menor temperatura se registra una disminucion
+notable de las precipitaciones, por el contrario, a mayor
+temperatura las precipitaciones tambien aumentan.
+
