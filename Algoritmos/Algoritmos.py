@@ -3,14 +3,14 @@
 
 listaNumeros = [41, 54, 22, 33, 56, 92, 86, 28, 101, 166]
 
-def ordenamientoBurbuja(x):
-    for i in range(len(x)):
-        for j in range(len(x) - 1):
-            if x[j] > x[j + 1]:
-                orden = x[j]
-                x[j] = x[j + 1]
-                x[j + 1] = orden
-    return x
+def ordenamientoBurbuja(lista):
+    for i in range(len(lista)):
+        for j in range(len(lista) - 1):
+            if lista[j] > lista[j + 1]:
+                orden = lista[j]
+                lista[j] = lista[j + 1]
+                lista[j + 1] = orden
+    return lista
 
 print(listaNumeros, "Lista desordenada.")
 ordenPorBurbuja = ordenamientoBurbuja(listaNumeros)
@@ -19,20 +19,20 @@ print(ordenPorBurbuja, "Lista ordenada por Burbuja.")
 #Ejercicio: 2
 '''Implementar un algoritmo de ordenamiento por inserción de una lista numérica.'''
 
-def ordenamientoInsercion(x):
-    for i in range(len(x)):
-        valor = x[i]
+def ordenamientoInsercion(lista):
+    for i in range(len(lista)):
+        valor = lista[i]
         indice = i - 1
 
         while indice >= 0:
-            if valor < x[indice]:
-                x[indice + 1] = x[indice]
-                x[indice] = valor
+            if valor < lista[indice]:
+                lista[indice + 1] = lista[indice]
+                lista[indice] = valor
                 indice = indice - 1
             else:
                 break
 
-    return x
+    return lista
     
 ordenPorInsercion = ordenamientoInsercion(listaNumeros)
 print(ordenPorInsercion, "Lista ordenada por insercion.")
@@ -54,9 +54,9 @@ caso recursividad.'''
 
 numero = int(input("Ingrese el numero del cual desea saber la posicion: "))
 
-def busquedaLineal(x, y):
-    for i in range(len(x)):
-        if x[i] == y:
+def busquedaLineal(lista, num):
+    for i in range(len(lista)):
+        if lista[i] == num:
             return i
     return None
 
@@ -67,14 +67,14 @@ print("El numero se encuentra en la posicion: ",buscar)
 
 numeroBuscado = int(input("Ingrese el numero que desea buscar: "))
 
-def busquedaBinaria(x, y):
+def busquedaBinaria(lista, num):
     inicio = 0
-    final = len(x) - 1
+    final = len(lista) - 1
     while inicio <= final:
         medio = (inicio + final) // 2
-        if x[medio] == y:
+        if lista[medio] == num:
             return medio
-        elif y > x[medio]:
+        elif num > lista[medio]:
             inicio = medio + 1
         else:
             final = medio - 1
@@ -100,16 +100,16 @@ from string import ascii_lowercase, ascii_uppercase
 texto = input("Ingrese el texto a cifrar: ")
 desplazamiento = int(input("Ingrese un numero del 1 al 10 para el desplazamiento: "))
 
-def cifradoCesar(x, y):
+def cifradoCesar(texto, num):
     resultado = []
-    for i in x:
+    for i in texto:
         if i in ascii_lowercase:
             indice = ascii_lowercase.index(i)
-            nuevoIndice = (indice + y) % len(ascii_lowercase)
+            nuevoIndice = (indice + num) % len(ascii_lowercase)
             resultado.append(ascii_lowercase[nuevoIndice])
         elif i in ascii_uppercase:
             indice = ascii_uppercase.index(i)
-            nuevoIndice = (indice + y) % len(ascii_uppercase)
+            nuevoIndice = (indice + num) % len(ascii_uppercase)
             resultado.append(ascii_uppercase[nuevoIndice])
         else:
             resultado.append(i)
