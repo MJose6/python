@@ -17,43 +17,64 @@ dispositivo.
   Registrar las maquinarias de la casa y calcular la amortización anual total de las
 maquinas.
   Imprimir el listado de dispositivos.'''
-
-
-
-
+  
 class DispositivosElectronicos():
     
-    def __init__(self, numeroSerie, descripcion, marca, horasUso, kwatt):
-        self._numeroSerie = numeroSerie
-        self._descripcion = descripcion
-        self._marca = marca
-        self._horasUso = horasUso
-        self._kwatt = kwatt
+    def __init__(self, numeroSerie, descripcion, marca, tipo, horasUso, kWatt):
+      self._numeroSerie = numeroSerie
+      self._descripcion = descripcion
+      self._marca = marca
+      self._tipo = tipo
+      self._horasUso = horasUso
+      self._kWatt = kWatt
+
+    @property
+    def numeroSerie(self):
+      return self._numeroSerie
+
+    @numeroSerie.setter
+    def numeroSerie(self, numeroSerie):
+      self._numeroSerie = numeroSerie
+
+    @property
+    def descripcion(self):
+      return self._descripcion
+
+    @descripcion.setter
+    def descripcion(self, descripcion):
+      self._descripcion = descripcion
+
+    @property
+    def marca(self):
+      return self._marca 
+
+    @marca.setter
+    def marca(self, marca):
+      self._marca = marca
+
+    @property
+    def tipo(self):
+      return self.tipo
+
+    @tipo.setter
+    def tipo(self, tipo):
+      self._tipo = tipo
+
+    @property
+    def horasUso(self):
+      return self._horasUso
+
+    @horasUso.setter
+    def horasUso(self, horasUso):
+      self._horasUso = horasUso
+
+    @property
+    def kWatt(self):
+      return self._kWatt
+
+    @kWatt.setter
+    def kWatt(self, kWatt):
+      self._kWatt = kWatt   
 
     def __str__(self):
-        return f'Numero de serie: {self._numeroSerie} - Descripcion: {self._descripcion} - Marca: {self._marca} - Consumo: {self._horasUso * self._kwatt} '
-
-
-class Electrodomesticos(DispositivosElectronicos):
-
-    def __init__(self, tipo, _numeroSerie, _descripcion, _marca, _horasUso, _kwatt):
-        super().__init__(_numeroSerie, _descripcion, _marca, _horasUso, _kwatt)
-        self._tipo = tipo
-
-    def __str__(self):
-        return f'Tipo: {self._tipo} - {super().__str__()}'
-
-
-aspiradora = Electrodomesticos("Casero","1549992", "Aspiradora", "Atma", 6, 15)
-print(aspiradora)
-hidroLavadora = Electrodomesticos('maquinaria', '25482933', 'Lavado industrial', 'Philips', 7, 22)
-print(hidroLavadora)
-
-#Posible uso
-'''class Maquinarias(DispositivosElectronicos):
-
-    def __init__(self, anioCompra, valor):
-        self._anioCompra = anioCompra
-        self._valor = valor
-
-'''
+        return f'Numero de serie: {self._numeroSerie} | Descripcion: {self._descripcion} | Marca: {self._marca} | Tipo: {self._tipo} | Consumo: {self._horasUso * self._kWatt}\n'
