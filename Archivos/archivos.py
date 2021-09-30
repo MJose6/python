@@ -19,7 +19,7 @@ vacuna1 = int()
 vacuna2 = int()
 vacuna3 = int()
 vacuna4 = int()
-consulta = str(input("Ingrese la provincia a consultar: "))
+consulta = str(input("Ingrese la provincia a consultar:"))
 consulta = consulta.capitalize()
 totalizador = 0
 for renglon in datosVacunas:
