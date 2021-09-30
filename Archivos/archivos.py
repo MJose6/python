@@ -10,7 +10,7 @@ almacene en estructuras que permitan dar respuestas a las siguientes consultas:
 
 import csv
 from typing import KeysView, ValuesView
-archivo = open("Covid19VacunasAgrupadas.csv", "r")
+archivo = open("Covid19VacunasAgrupadas.csv", "r", encoding='utf8')
 leerDatos = csv.DictReader(archivo)
 datosVacunas = list(leerDatos)
 
@@ -20,6 +20,7 @@ vacuna2 = int()
 vacuna3 = int()
 vacuna4 = int()
 consulta = str(input("Ingrese la provincia a consultar: "))
+consulta = consulta.capitalize()
 totalizador = 0
 for renglon in datosVacunas:
     if renglon['jurisdiccion_nombre'] == consulta:
@@ -63,7 +64,7 @@ elif vacuna4 < vacuna1 and vacuna4 < vacuna2 and vacuna4 < vacuna3:
 
 #1.2
 import operator
-provincias = ["Buenos Aires","CABA","Catamarca","Chaco","Chubut","Corrientes","CÃ³rdoba","Entre RÃ\xados","Formosa","Jujuy","La Pampa","La Rioja","Mendoza","Misiones","NeuquÃ©n","RÃ\xado Negro","Salta","San Juan","San Luis","Santa Cruz","Santa Fe","Santiago del Estero","Tierra del Fuego","TucumÃ¡n"]
+provincias = ["Buenos Aires","CABA","Catamarca","Chaco","Chubut","Corrientes","Córdoba","Entre Ríos","Formosa","Jujuy","La Pampa","La Rioja","Mendoza","Misiones","Neuquén","Río Negro","Salta","San Juan","San Luis","Santa Cruz","Santa Fe","Santiago del Estero","Tierra del Fuego","Tucumán"]
 provincias2dosis = {}
 total = 0
 for nombre in provincias:
