@@ -505,7 +505,7 @@ class Banco():
     def pagoSueldos(self):
         pass
 
-
+    print('1. Crear Caja de ahorro')
 
     def crearCuenta(self):
         if self._usuarioConectado.rol == 'Cliente Individuo':
