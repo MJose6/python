@@ -584,7 +584,26 @@ class Banco():
 
     # Operacion validas solo para cta cte
     def pagoSueldos(self):
-        pass
+        if self._usuarioConectado.rol == 'Cliente Pyme':
+            print('Usted va a depositar los haberes a un empleado')
+            pagoSueldo = int(input('Ingrese el monto a depositar: '))
+            cbuCuentaDestino = int(input('Ingrese el cbu de la cuenta destino: '))
+            if self._cuentas[self._usuarioConectado]._saldo >= pagoSueldo:
+                print(f'Se debitara de su cuenta el importe: {pagoSueldo} destinado al deposito del sueldo del empleado cbu: {cbuCuentaDestino}')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - pagoSueldo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print(f'Usted ha realizado el pago de haberes con exito. Su saldo restante es de {saldoRestante}')
+                else:
+                    print('La operacion ha sido cancelada.')
+            else:
+                print('----------')
+                print('Usted no dispone de fondos para realizar el pago de sueldos.')
+        else:
+            print('--------')
+            print('Usted no es Cliente Pyme. No puede continuar con la operacion.')
 
     print('1. Crear Caja de ahorro')
 
