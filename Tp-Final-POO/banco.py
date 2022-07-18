@@ -489,21 +489,123 @@ class Banco():
 
     #Operacion validas solo para cta cte
     def plazoFijo(self):
-        pass
+        print('Usted esta por realizar un nuevo plazo fijo')
+        montoAplazoFijo = int(input('Ingrese el monto a destinar para el plazo fijo: '))
+        duracionPlazoFijo = int(input('Ingrese los dias para realizar el plazo fijo: '))
+        ganancia = 0 
+        if self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
+            if self._cuentas[self._usuarioConectado]._saldo >= 1000 and montoAplazoFijo >= 1000 and duracionPlazoFijo == 30:
+                print(f'Usted esta por realizar un plazo fijo a 30 dias')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    ganancia = montoAplazoFijo * 0.10
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - montoAplazoFijo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print('Felicidades, USTED ha realizado un plazo fijo con exito.')
+                    print(f'Obtiene una ganancia de: {ganancia}')
+                else:
+                    print('-----------------------')
+                    print('El plazo fijo a 30 dias ha sido cancelado.')
+            elif self._cuentas[self._usuarioConectado]._saldo >= 1000 and montoAplazoFijo >= 1000 and duracionPlazoFijo == 60:
+                print('Usted esta por realizar un plazo fijo a 60 dias')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    ganancia = montoAplazoFijo * 0.20
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - montoAplazoFijo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print('Felicidades, USTED ha realizado un plazo fijo con exito.')
+                    print(f'Obtiene una ganancia de: {ganancia}')
+                else:
+                    print('-----------------------')
+                    print('El plazo fijo a 60 dias ha sido cancelado.')
+            elif self._cuentas[self._usuarioConectado]._saldo >= 1000 and montoAplazoFijo >= 1000 and duracionPlazoFijo == 90:
+                print('Usted esta por realizar un plazo fijo a 90 dias')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    ganancia = montoAplazoFijo * 0.30
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - montoAplazoFijo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print('Felicidades, USTED ha realizado un plazo fijo con exito.')
+                    print(f'Obtiene una ganancia de: {ganancia}')
+                else:
+                    print('-----------------------')
+                    print('El plazo fijo a 90 dias ha sido cancelado.')   
+            else:
+                print('Fondos Insuficientes en su cuenta - Recuerde que el monto minimo para realizar un plazo fijo es de $ 1000.')   
+        else:
+            print('Usted debe poseer cta cte para poder realizar un plazo fijo.')
+    
+
 
     # Operacion validas solo para cta cte
     def compraMonedaExtranjera(self):
-        pass
+        print('Usted va a comprar moneda extranjera - Compra minima 100USD')
+        montoAcomprar = int(input('Ingrese el monto que desea comprar: '))
+        conversionDia = int(input('Ingrese el valor en pesos equivalente a 1 USD: '))
+        montoMinimoUSD = 100
+        if self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
+            conversion = montoAcomprar * conversionDia
+            if montoAcomprar >= montoMinimoUSD and self._cuentas[self._usuarioConectado]._saldo >= conversion:
+                print(f'Se debitara de su cuenta el importe: {conversion} destinado al cambio de divisas')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    saldoFinal = self._cuentas[self._usuarioConectado]._saldo - conversion
+                    self._cuentas[self._usuarioConectado]._saldo = saldoFinal
+                    print('-------------')
+                    print(f'La conversion se ha realizado con Exito. Compro {montoAcomprar} y se debitaron {conversion} de su cuenta')
+                
+            else:
+                print('-------------')
+                print('Usted no dispone del monto minimo equivalente a 100 USD para realizar la operacion')
+        else:
+            print('Usted debe tener una cta cte para operar con Moneda Extranjera')
 
     # Operacion validas solo para cta cte
     def inversionBonos(self):
-        pass
+        if self._usuarioConectado.rol == 'Cliente Pyme':
+            print('Usted invertira en Bonos Argentinos - tenga en cuenta que 1 bono cotiza a 18 USD')
+            cantidadBonos = int(input('Ingrese la cantidad de bonos a comprar para invertir: '))
+            pesosAconvertir = cantidadBonos * 18
+            if self._cuentas[self._usuarioConectado]._saldo >= pesosAconvertir:
+                print(f'Se debitara de su cuenta el importe: {pesosAconvertir} destinado a la compra de bonos para operar.')
+                activosLiquidos = self._cuentas[self._usuarioConectado]._saldo - pesosAconvertir
+                self._cuentas[self._usuarioConectado]._saldo = activosLiquidos
+                print('-------------')
+                print(f'La compra de bonos se ha realizado con Exito. Compro {cantidadBonos} y se debitaron {pesosAconvertir} de su cuenta')
+            else:
+                print('-------------')
+                print('Usted no dispone los fondos necesarios para realizar la operacion.')
+        else:
+            ('Usted debe ser Cliente Pyme para poder operar con bonos.')
 
     # Operacion validas solo para cta cte
     def pagoSueldos(self):
-        pass
+        if self._usuarioConectado.rol == 'Cliente Pyme':
+            print('Usted va a depositar los haberes a un empleado')
+            pagoSueldo = int(input('Ingrese el monto a depositar: '))
+            cbuCuentaDestino = int(input('Ingrese el cbu de la cuenta destino: '))
+            if self._cuentas[self._usuarioConectado]._saldo >= pagoSueldo:
+                print(f'Se debitara de su cuenta el importe: {pagoSueldo} destinado al deposito del sueldo del empleado cbu: {cbuCuentaDestino}')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - pagoSueldo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print(f'Usted ha realizado el pago de haberes con exito. Su saldo restante es de {saldoRestante}')
+                else:
+                    print('La operacion ha sido cancelada.')
+            else:
+                print('----------')
+                print('Usted no dispone de fondos para realizar el pago de sueldos.')
+        else:
+            print('--------')
+            print('Usted no es Cliente Pyme. No puede continuar con la operacion.')
 
-
+    print('1. Crear Caja de ahorro')
 
     def crearCuenta(self):
         if self._usuarioConectado.rol == 'Cliente Individuo':
