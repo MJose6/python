@@ -489,9 +489,56 @@ class Banco():
 
     #Operacion validas solo para cta cte
     def plazoFijo(self):
-        pass
+        print('Usted esta por realizar un nuevo plazo fijo')
+        montoAplazoFijo = int(input('Ingrese el monto a destinar para el plazo fijo: '))
+        duracionPlazoFijo = int(input('Ingrese los dias para realizar el plazo fijo: '))
+        ganancia = 0 
+        if self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
+            if self._cuentas[self._usuarioConectado]._saldo >= 1000 and montoAplazoFijo >= 1000 and duracionPlazoFijo == 30:
+                print(f'Usted esta por realizar un plazo fijo a 30 dias')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    ganancia = montoAplazoFijo * 0.10
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - montoAplazoFijo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print('Felicidades, USTED ha realizado un plazo fijo con exito.')
+                    print(f'Obtiene una ganancia de: {ganancia}')
+                else:
+                    print('-----------------------')
+                    print('El plazo fijo a 30 dias ha sido cancelado.')
+            elif self._cuentas[self._usuarioConectado]._saldo >= 1000 and montoAplazoFijo >= 1000 and duracionPlazoFijo == 60:
+                print('Usted esta por realizar un plazo fijo a 60 dias')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    ganancia = montoAplazoFijo * 0.20
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - montoAplazoFijo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print('Felicidades, USTED ha realizado un plazo fijo con exito.')
+                    print(f'Obtiene una ganancia de: {ganancia}')
+                else:
+                    print('-----------------------')
+                    print('El plazo fijo a 60 dias ha sido cancelado.')
+            elif self._cuentas[self._usuarioConectado]._saldo >= 1000 and montoAplazoFijo >= 1000 and duracionPlazoFijo == 90:
+                print('Usted esta por realizar un plazo fijo a 90 dias')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    ganancia = montoAplazoFijo * 0.30
+                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - montoAplazoFijo
+                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    print('Felicidades, USTED ha realizado un plazo fijo con exito.')
+                    print(f'Obtiene una ganancia de: {ganancia}')
+                else:
+                    print('-----------------------')
+                    print('El plazo fijo a 90 dias ha sido cancelado.')   
+            else:
+                print('Fondos Insuficientes en su cuenta - Recuerde que el monto minimo para realizar un plazo fijo es de $ 1000.')   
+        else:
+            print('Usted debe poseer cta cte para poder realizar un plazo fijo.')
     
-    #dfsfgsgf
+
 
     # Operacion validas solo para cta cte
     def compraMonedaExtranjera(self):
