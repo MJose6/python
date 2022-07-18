@@ -566,7 +566,21 @@ class Banco():
 
     # Operacion validas solo para cta cte
     def inversionBonos(self):
-        pass
+        if self._usuarioConectado.rol == 'Cliente Pyme':
+            print('Usted invertira en Bonos Argentinos - tenga en cuenta que 1 bono cotiza a 18 USD')
+            cantidadBonos = int(input('Ingrese la cantidad de bonos a comprar para invertir: '))
+            pesosAconvertir = cantidadBonos * 18
+            if self._cuentas[self._usuarioConectado]._saldo >= pesosAconvertir:
+                print(f'Se debitara de su cuenta el importe: {pesosAconvertir} destinado a la compra de bonos para operar.')
+                activosLiquidos = self._cuentas[self._usuarioConectado]._saldo - pesosAconvertir
+                self._cuentas[self._usuarioConectado]._saldo = activosLiquidos
+                print('-------------')
+                print(f'La compra de bonos se ha realizado con Exito. Compro {cantidadBonos} y se debitaron {pesosAconvertir} de su cuenta')
+            else:
+                print('-------------')
+                print('Usted no dispone los fondos necesarios para realizar la operacion.')
+        else:
+            ('Usted debe ser Cliente Pyme para poder operar con bonos.')
 
     # Operacion validas solo para cta cte
     def pagoSueldos(self):
