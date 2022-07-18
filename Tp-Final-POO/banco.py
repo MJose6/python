@@ -490,6 +490,8 @@ class Banco():
     #Operacion validas solo para cta cte
     def plazoFijo(self):
         pass
+    
+    #dfsfgsgf
 
     # Operacion validas solo para cta cte
     def compraMonedaExtranjera(self):
