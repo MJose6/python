@@ -495,7 +495,27 @@ class Banco():
 
     # Operacion validas solo para cta cte
     def compraMonedaExtranjera(self):
-        pass
+        print('Usted va a comprar moneda extranjera - Compra minima 100USD')
+        montoAcomprar = int(input('Ingrese el monto que desea comprar: '))
+        conversionDia = int(input('Ingrese el valor en pesos equivalente a 1 USD: '))
+        montoMinimoUSD = 100
+        if self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
+            conversion = montoAcomprar * conversionDia
+            if montoAcomprar >= montoMinimoUSD and self._cuentas[self._usuarioConectado]._saldo >= conversion:
+                print(f'Se debitara de su cuenta el importe: {conversion} destinado al cambio de divisas')
+                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                confirmacion = confirmacion.upper()
+                if confirmacion == 'SI':
+                    saldoFinal = self._cuentas[self._usuarioConectado]._saldo - conversion
+                    self._cuentas[self._usuarioConectado]._saldo = saldoFinal
+                    print('-------------')
+                    print(f'La conversion se ha realizado con Exito. Compro {montoAcomprar} y se debitaron {conversion} de su cuenta')
+                
+            else:
+                print('-------------')
+                print('Usted no dispone del monto minimo equivalente a 100 USD para realizar la operacion')
+        else:
+            print('Usted debe tener una cta cte para operar con Moneda Extranjera')
 
     # Operacion validas solo para cta cte
     def inversionBonos(self):
