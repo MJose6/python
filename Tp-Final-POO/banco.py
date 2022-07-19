@@ -283,7 +283,6 @@ class Banco():
                         self.logIn()
 
 
-
     #Operaciones validas para caja de ahorros y cta cte
     def depositar(self):
         if self._usuarioConectado.rol == 'Cliente Individuo':
