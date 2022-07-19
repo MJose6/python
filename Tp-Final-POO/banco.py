@@ -304,6 +304,7 @@ class Banco():
 
 
 
+
     def extraccion(self):
         extraccion = int(input('Ingrese el monto que desea extraer (numeros enteros sin coma) :'))
         if self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros comun':
