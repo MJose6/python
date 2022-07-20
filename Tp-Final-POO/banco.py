@@ -222,8 +222,10 @@ class Banco():
                             self.extraccion()
                             operacion = False
                         elif opcion == '7':
+                            self.plazoFijo()
                             operacion = False
                         elif opcion == '8':
+                            self.compraMonedaExtranjera()
                             operacion = False
                         elif opcion == '9':
                             self.logOut()
@@ -269,7 +271,7 @@ class Banco():
                         self.inversionBonos()
                         operacion = False
                     elif opcion == '8':
-                        self.pagoSueldos
+                        self.pagoSueldos()
                         operacion = False
                     elif opcion == '9':
                         self.consultaCbuCuenta()
@@ -281,6 +283,7 @@ class Banco():
                         self.logOut()
                         operacion = True
                         self.logIn()
+
 
 
     #Operaciones validas para caja de ahorros y cta cte
@@ -358,6 +361,7 @@ class Banco():
             else:
                 print('-----------------------')
                 print('No posee fondos suficientes para realizar la extraccion.')
+
 
 
 
@@ -754,7 +758,7 @@ class Banco():
             print('Se cerro la sesion.')
             self._conexion = False
 
-print('hola')
+
 
 if __name__ == '__main__':
     print('-----------------------')
