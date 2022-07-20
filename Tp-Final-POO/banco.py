@@ -222,8 +222,10 @@ class Banco():
                             self.extraccion()
                             operacion = False
                         elif opcion == '7':
+                            self.plazoFijo()
                             operacion = False
                         elif opcion == '8':
+                            self.compraMonedaExtranjera()
                             operacion = False
                         elif opcion == '9':
                             self.logOut()
@@ -260,12 +262,16 @@ class Banco():
                         self.pagoEnLinea()
                         operacion = False
                     elif opcion == '5':
+                        self.plazoFijo()
                         operacion = False
                     elif opcion == '6':
+                        self.compraMonedaExtranjera()
                         operacion = False
                     elif opcion == '7':
+                        self.inversionBonos()
                         operacion = False
                     elif opcion == '8':
+                        self.pagoSueldos()
                         operacion = False
                     elif opcion == '9':
                         self.consultaCbuCuenta()
