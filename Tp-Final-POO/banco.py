@@ -3,7 +3,7 @@ from usuarios import Usuario
 from administrador import  Admin
 from cuentas import Cuenta, CajaDeAhorros, CtaCte
 from datetime import datetime
-
+from secuencia import Secuencias
 
 
 
@@ -19,6 +19,7 @@ class Banco():
         self._operaciones = {}
         self._intentos = 0
         self._usuarioConectado = None
+        self._beneficiario = None
         self.cargarDatosIniciales()
 
     def getCuentas(self):
@@ -41,45 +42,50 @@ class Banco():
     def cargarDatosIniciales(self):
         #creando admin
         user = Admin('ricardo', 'pepe', 44, 25343232)
-        usUser1 = Usuario('banquero', 'b1234', 'Administrador', None, None)
+        usUser1 = Usuario('ADM', 'ADM123', 'Administrador')
         self._admin[user.getId()] = user
         self._usuarios[usUser1.usuario] = usUser1
 
         #creando cliente1
         cliente1 = Individuo('Juan', 'Perez', 33, 33543829, 'jperez@mail.com', 'dinamarca 641', 24940303456)
-        usCliente1 = Usuario('jp', 'jp123', 'Cliente Individuo', None, cliente1)
-        self._clientes[cliente1.getId()] = cliente1
+        usCliente1 = Usuario('jp', 'jp123', 'Cliente Individuo')
         self._usuarios[usCliente1.usuario] = usCliente1
-        cta = CajaDeAhorros(self._sucursal, datetime.now(), 0, 'Caja de ahorros comun', None)
-        self._cuentas[usCliente1] = cta
-        usCliente1.individuo.getCuentasCli()[usCliente1] = cta
+        CBU = Secuencias.getNroCbu()
+        CTA = Secuencias.getNroCuenta()
+        cta = CajaDeAhorros(self._sucursal, CBU, CTA, datetime.now(), 0, 'Caja de ahorros comun', None)
+        self._cuentas[CBU] = cta
+        self._clientes[usCliente1] = cliente1
+
 
         #creando cliente2
         cliente2 = Individuo('Raul', 'Gonzales', 38, 27543869, 'rgonzales@mail.com', 'las heras 641', 24944560303)
-        usCliente2 = Usuario('rg', 'rg123', 'Cliente Individuo', None, cliente2)
-        self._clientes[cliente2.getId()] = cliente2
+        usCliente2 = Usuario('rg', 'rg123', 'Cliente Individuo')
         self._usuarios[usCliente2.usuario] = usCliente2
-        cta = CtaCte(None, self._sucursal, datetime.now(), 0, 'Cta cte de saldo retenido', 3000)
-        self._cuentas[usCliente2] = cta
-        usCliente2.individuo.getCuentasCli()[usCliente2] = cta
+        CBU = Secuencias.getNroCbu()
+        CTA = Secuencias.getNroCuenta()
+        cta = CtaCte(None, self._sucursal, CBU, CTA, datetime.now(), 0, 'Cta cte de saldo retenido', 3000)
+        self._cuentas[CBU] = cta
+        self._clientes[usCliente2] = cliente2
 
         #creando cliente3
         cliente3 = Pyme('La Super', '30-71495333-5', 'lasuper@mail.com', 'Rauch 1234', 2494219282)
-        usCliente3 = Usuario('ls', 'ls123', 'Cliente Pyme', cliente3, None)
-        self._clientes[cliente3.getId()] = cliente3
+        usCliente3 = Usuario('ls', 'ls123', 'Cliente Pyme')
         self._usuarios[usCliente3.usuario] = usCliente3
-        cta = CtaCte(10000, self._sucursal, datetime.now(), 0, 'Cta cte comun', None)
+        CBU = Secuencias.getNroCbu()
+        CTA = Secuencias.getNroCuenta()
+        cta = CtaCte(10000, self._sucursal, CBU, CTA, datetime.now(), 0, 'Cta cte comun', None)
         self._cuentas[usCliente3] = cta
-        usCliente3.pyme.getCuentasCli()[usCliente3] = cta
+        self._clientes[usCliente3] = cliente3
 
         #creando cliente4
         cliente4 = Pyme('La EFE', '30-72436789-5', 'laefe@mail.com', 'Darragueira 525', 2494219282)
-        usCliente4 = Usuario('le', 'le123', 'Cliente Pyme', cliente4, None)
-        self._clientes[cliente4.getId()] = cliente4
+        usCliente4 = Usuario('le', 'le123', 'Cliente Pyme')
         self._usuarios[usCliente4.usuario] = usCliente4
-        cta = CtaCte(10000, self._sucursal, datetime.now(), 0, 'Cta cte de saldo retenido', 3000)
+        CBU = Secuencias.getNroCbu()
+        CTA = Secuencias.getNroCuenta()
+        cta = CtaCte(10000, self._sucursal, CBU, CTA, datetime.now(), 0, 'Cta cte de saldo retenido', 3000)
         self._cuentas[usCliente4] = cta
-        usCliente4.pyme.getCuentasCli()[usCliente4] = cta
+        self._clientes[usCliente4] = cliente4
 
 
 
@@ -108,15 +114,12 @@ class Banco():
                 direccion = input('Ingrese su direccion: ')
                 telefono = input('Ingrese su telefono: ')
                 cliente = Individuo(nombre, apellido, edad, dni, mail, direccion, telefono)
-                self._clientes[cliente.getId()] = cliente
                 usuario = input('Ingrese un nombre de usuario: ')
                 contraseña = input('Ingrese una contraseña: ')
                 rol = 'Cliente Individuo'
-                pyme = None
-                individuo = cliente
-                user = Usuario(usuario, contraseña, rol, pyme, individuo)
+                user = Usuario(usuario, contraseña, rol)
+                self._clientes[cliente.user] = cliente
                 self._usuarios[user.usuario] = user
-
 
 
             if opcion == '2':
@@ -126,14 +129,12 @@ class Banco():
                 direccion = input('Ingrese su direccion: ')
                 telefono = input('Ingrese su telefono: ')
                 cliente = Pyme(razonSocial, cuit, mail, direccion, telefono)
-                self._clientes[cliente.getId()] = cliente
                 usuario = input('Ingrese un nombre de usuario: ')
                 contraseña = input('Ingrese una contraseña: ')
                 rol = 'Cliente Pyme'
-                pyme = cliente
-                individuo = None
-                user = Usuario(usuario, contraseña, rol, pyme, individuo)
+                user = Usuario(usuario, contraseña, rol)
                 self._usuarios[user.usuario] = user
+                self._clientes[cliente.user] = cliente
 
             if opcion == '3':
                 self.logOut()
@@ -144,15 +145,10 @@ class Banco():
 
     def menuOperacionesCliente(self):
         usuario = self._usuarioConectado
-
-        operaciones = False
-        for us in self._cuentas.values():
-            operaciones = True
-        if operaciones == True and usuario.rol == 'Cliente Individuo':
+        if usuario.rol == 'Cliente Individuo':
             opTipoCuenta = input('Presione 1 para operar con CAJA DE AHORROS y 2 para operar con CUENTA CORRIENTE: ')
-
             if opTipoCuenta == '1':
-                if self._usuarioConectado in self._cuentas and self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros comun' or self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros de saldo retenido':
+                if usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Caja de ahorros comun' or self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido':
                     operacion = False
                     while operacion == False:
                         print('1. Depositar')
@@ -190,7 +186,7 @@ class Banco():
                     print('Usted no posee una caja de ahorros.')
                     self.menuOperacionesCliente()
             else:
-                if self._usuarioConectado in self._cuentas and self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun' or self._cuentas[self._usuarioConectado]._tipo == 'Cta cte de saldo retenido':
+                if usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte comun' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
                     operacion = False
                     while operacion == False:
                         print('1. Depositar')
@@ -222,8 +218,10 @@ class Banco():
                             self.extraccion()
                             operacion = False
                         elif opcion == '7':
+                            self.plazoFijo()
                             operacion = False
                         elif opcion == '8':
+                            self.compraMonedaExtranjera()
                             operacion = False
                         elif opcion == '9':
                             self.logOut()
@@ -231,8 +229,8 @@ class Banco():
                             self.logIn()
 
 
-        elif operaciones == True and usuario.rol == 'Cliente Pyme':
-            if self._usuarioConectado in self._cuentas:
+        elif usuario.rol == 'Cliente Pyme':
+            if usuario in self._cuentas:
                 operacion = False
                 while operacion == False:
                     print('1. Depositar')
@@ -269,7 +267,7 @@ class Banco():
                         self.inversionBonos()
                         operacion = False
                     elif opcion == '8':
-                        self.pagoSueldos
+                        self.pagoSueldos()
                         operacion = False
                     elif opcion == '9':
                         self.consultaCbuCuenta()
@@ -285,37 +283,36 @@ class Banco():
 
     #Operaciones validas para caja de ahorros y cta cte
     def depositar(self):
-        if self._usuarioConectado.rol == 'Cliente Individuo':
+        usuario = self._usuarioConectado
+        if usuario.rol == 'Cliente Individuo':
             monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
             print('-----------------------')
-            print(f' Su saldo actual es de: {self._cuentas[self._usuarioConectado]._saldo} ')
-            deposito = self._cuentas[self._usuarioConectado]._saldo + monto
-            self._usuarioConectado.individuo.getCuentasCli()[self._usuarioConectado]._saldo = deposito
+            deposito = self._cuentas[usuario]._saldo + monto
+            self._cuentas[usuario]._saldo = deposito
             print('-----------------------')
             print(f' Acaba de depositar: {monto} ')
-        elif self._usuarioConectado.rol == 'Cliente Pyme':
+        elif usuario.rol == 'Cliente Pyme':
             monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
             print('-----------------------')
-            print(f' Su saldo actual es de: {self._cuentas[self._usuarioConectado]._saldo} ')
-            deposito = self._cuentas[self._usuarioConectado]._saldo + monto
-            self._usuarioConectado.pyme.getCuentasCli()[self._usuarioConectado]._saldo = deposito
+            deposito = self._cuentas[usuario]._saldo + monto
+            self._cuentas[usuario]._saldo = deposito
             print('-----------------------')
             print(f' Acaba de depositar: {monto} ')
-
 
 
 
     def extraccion(self):
+        usuario = self._usuarioConectado
         extraccion = int(input('Ingrese el monto que desea extraer (numeros enteros sin coma) :'))
-        if self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros comun':
-            if self._cuentas[self._usuarioConectado]._saldo > extraccion:
+        if self._cuentas[usuario]._tipo == 'Caja de ahorros comun':
+            if self._cuentas[usuario]._saldo > extraccion:
                 print('-----------------------')
                 print(f'Se extraera de su cuenta el importe: {extraccion}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    extraccion = self._cuentas[self._usuarioConectado]._saldo - extraccion
-                    self._cuentas[self._usuarioConectado]._saldo = extraccion
+                    extraccion = self._cuentas[usuario]._saldo - extraccion
+                    self._cuentas[usuario]._saldo = extraccion
                     print('-----------------------')
                     print('Retire el dinero.')
                 else:
@@ -324,16 +321,16 @@ class Banco():
             else:
                 print('-----------------------')
                 print('No posee fondos suficientes para realizar la extraccion.')
-        elif self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros de saldo retenido' or self._cuentas[self._usuarioConectado]._tipo == 'Cta cte de saldo retenido':
-            if self._cuentas[self._usuarioConectado]._saldo > extraccion and (self._cuentas[self._usuarioConectado]._saldo - extraccion) >= 3000:
-                if self._cuentas[self._usuarioConectado]._saldo > extraccion:
+        elif self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
+            if self._cuentas[usuario]._saldo > extraccion and (self._cuentas[usuario]._saldo - extraccion) >= 3000:
+                if self._cuentas[usuario]._saldo > extraccion:
                     print('-----------------------')
                     print(f'Se extraera de su cuenta el importe: {extraccion}')
                     confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                     confirmacion = confirmacion.upper()
                     if confirmacion == 'SI':
-                        extraccion = self._cuentas[self._usuarioConectado]._saldo - extraccion
-                        self._cuentas[self._usuarioConectado]._saldo = extraccion
+                        extraccion = self._cuentas[usuario]._saldo - extraccion
+                        self._cuentas[usuario]._saldo = extraccion
                         print('-----------------------')
                         print('Retire el dinero.')
                     else:
@@ -342,15 +339,15 @@ class Banco():
                 else:
                     print('-----------------------')
                     print('No posee fondos suficientes para realizar la extraccion.')
-        elif self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
-            if self._cuentas[self._usuarioConectado]._saldo > -10000 and (self._cuentas[self._usuarioConectado]._saldo - extraccion) > -10000:
+        elif self._cuentas[usuario]._tipo == 'Cta cte comun':
+            if self._cuentas[usuario]._saldo > -10000 and (self._cuentas[usuario]._saldo - extraccion) > -10000:
                 print('-----------------------')
                 print(f'Se extraera de su cuenta el importe: {extraccion}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    extraccion = self._cuentas[self._usuarioConectado]._saldo - extraccion
-                    self._cuentas[self._usuarioConectado]._saldo = extraccion
+                    extraccion = self._cuentas[usuario]._saldo - extraccion
+                    self._cuentas[usuario]._saldo = extraccion
                     print('-----------------------')
                     print('Retire el dinero.')
                 else:
@@ -363,26 +360,38 @@ class Banco():
 
 
 
-    def transferir(self):     #No guarda la transferencia en la cuenta destino
-        cuentaAtransferir = int(input('Ingrese el numero de la cuenta a donde desea hacer la transferencia: '))
+    def transferir(self):
+        usuario = self._usuarioConectado
+        cbu = input('Ingrese el numero de CBU/CVU a donde desea hacer la transferencia: ')
         transferencia = int(input('Ingrese el monto que desea transferir (numeros enteros sin coma): '))
-        if self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros comun':
-            if self._cuentas[self._usuarioConectado]._saldo > transferencia:
-                print('-----------------------')
-                print(f'Se debitara de su cuenta el importe: {transferencia} destinado a la cuenta n°: {cuentaAtransferir}')
-                confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
-                confirmacion = confirmacion.upper()
-                if confirmacion == 'SI':
-                    transferido = self._cuentas[self._usuarioConectado]._saldo - transferencia
-                    self._cuentas[self._usuarioConectado]._saldo = transferido
+        for key, value in self._cuentas.items():
+            if cbu == value:
+                return key
+                print(key)
+        if cbu in self._cuentas[usuario]._cbu:
+            print('hola')
+            destino = self._cuentas.get(cbu)
+            print(destino)
+            self._beneficiario = destino
+            print(self._beneficiario)
+            if self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros comun':
+                if self._cuentas[self._usuarioConectado]._saldo > transferencia:
                     print('-----------------------')
-                    print('La transferencia se realizo con exito.')
+                    print(f'Se debitara de su cuenta el importe: {transferencia} destinado a la cuenta n°: {cbu}')
+                    confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
+                    confirmacion = confirmacion.upper()
+                    if confirmacion == 'SI':
+                        transferido = self._cuentas[self._usuarioConectado]._saldo - transferencia
+                        self._cuentas[self._usuarioConectado]._saldo = transferido
+                        self._cuentas[cuentaAtransferir]._saldo += transferencia
+                        print('-----------------------')
+                        print('La transferencia se realizo con exito.')
+                    else:
+                        print('-----------------------')
+                        print('La transferencia ah sido cancelada.')
                 else:
                     print('-----------------------')
-                    print('La transferencia ah sido cancelada.')
-            else:
-                print('-----------------------')
-                print('No posee fondos suficientes para realizar la transferencia.')
+                    print('No posee fondos suficientes para realizar la transferencia.')
 
         if self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
             if self._cuentas[self._usuarioConectado]._saldo > -10000 and (self._cuentas[self._usuarioConectado]._saldo - transferencia) > -10000:
@@ -712,6 +721,7 @@ class Banco():
         if miUsuario in self._usuarios and miContraseña == self._usuarios[miUsuario]._contraseña:
             user = self._usuarios.get(miUsuario)
             self._usuarioConectado = user
+            print(self._usuarioConectado)
             self._conexion = True
             if self._conexion == True:
                 eleccion = input('Presione 1 para ingresar como administrador, 2 para ingresar como cliente: ')
@@ -731,17 +741,20 @@ class Banco():
                     print('-----------------------')
                     print('Ingreso como cliente')
                     if self._conexion == True:
+                        print(self._usuarioConectado)
                         eleccion = input('Si desea crear una cuenta presione 1, si ya posee una cuenta presione 2: ')
                         if eleccion == '1':
                             self.crearCuenta()
                         elif eleccion == '2':
-                            for usConectado in self._cuentas:
-                                if self._usuarioConectado == usConectado:
+                            for key, value in self._clientes.items():
+                                if self._usuarioConectado == key:
                                     self.menuOperacionesCliente()
-
+                        else:
+                            print('Ingreso una opcion no válida')
         else:
             self._intentos += 1
             if self._intentos <= 2:
+
                 print('-----------------------')
                 print('Error en el nombre de usuario o contraseña, Intentelo nuevamente: ')
                 print(f'Intentos {self._intentos}')
@@ -756,11 +769,11 @@ class Banco():
             print('Se cerro la sesion.')
             self._conexion = False
 
-print('hola')
 
 if __name__ == '__main__':
     print('-----------------------')
     banco1 = Banco()
+
     print('clave de diccionario usuarios')
     for us in banco1.getUsuarios().keys():
         print(us)
@@ -769,7 +782,6 @@ if __name__ == '__main__':
     print('valores de diccionario usuario')
     for us in banco1.getUsuarios().values():
         print(us)
-
     print('-----------------------')
     print('clave de diccionario cuentas')
     for us in banco1.getCuentas().keys():
@@ -779,7 +791,15 @@ if __name__ == '__main__':
     print('valor de diccionario cuentas')
     for us in banco1.getCuentas().values():
         print(us)
+    print('-----------------------')
+    print('clave de diccionario clientes')
+    for us in banco1.getClientes().keys():
+        print(us)
 
+    print('-----------------------')
+    print('valor de diccionario clientes')
+    for us in banco1.getClientes().values():
+        print(us)
     print('-----------------------')
     banco1.logIn()
 

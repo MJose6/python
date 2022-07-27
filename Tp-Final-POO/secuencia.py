@@ -1,8 +1,8 @@
 class Secuencias():
 
     nroOperacion = 1
-    nroCuenta = 1000000000
-    nroCbu = 100000000000000
+    nroCuenta = 100
+    nroCbu = 1000
     nroCliente = 1
     nroAdm = 1
     nroUser = 1
