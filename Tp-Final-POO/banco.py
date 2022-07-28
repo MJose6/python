@@ -19,7 +19,6 @@ class Banco():
         self._operaciones = {}
         self._intentos = 0
         self._usuarioConectado = None
-        self._beneficiario = None
         self.cargarDatosIniciales()
 
     def getCuentas(self):
@@ -118,7 +117,6 @@ class Banco():
                 contraseña = input('Ingrese una contraseña: ')
                 rol = 'Cliente Individuo'
                 user = Usuario(usuario, contraseña, rol)
-                self._clientes[cliente.user] = cliente
                 self._usuarios[user.usuario] = user
 
 
@@ -134,7 +132,6 @@ class Banco():
                 rol = 'Cliente Pyme'
                 user = Usuario(usuario, contraseña, rol)
                 self._usuarios[user.usuario] = user
-                self._clientes[cliente.user] = cliente
 
             if opcion == '3':
                 self.logOut()
@@ -372,15 +369,15 @@ class Banco():
 
 
             if self._cuentas[usuario]._tipo == 'Caja de ahorros comun':
-                if self._cuentas[self._usuarioConectado]._saldo > transferencia:
+                if self._cuentas[usuario]._saldo > transferencia:
                     print('-----------------------')
                     print(f'Se debitara de su cuenta el importe: {transferencia} destinado a la cuenta n°: {cbu}')
                     confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                     confirmacion = confirmacion.upper()
                     if confirmacion == 'SI':
-                        transferido = self._cuentas[self._usuarioConectado]._saldo - transferencia
-                        self._cuentas[self._usuarioConectado]._saldo = transferido
-                        self._cuentas[cuentaAtransferir]._saldo += transferencia
+                        aTransferir = self._cuentas[usuario]._saldo - transferencia
+                        self._cuentas[usuario]._saldo = aTransferir
+                        self._cuentas[destino]._saldo += transferencia
                         print('-----------------------')
                         print('La transferencia se realizo con exito.')
                     else:
@@ -390,15 +387,16 @@ class Banco():
                     print('-----------------------')
                     print('No posee fondos suficientes para realizar la transferencia.')
 
-        if self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
-            if self._cuentas[self._usuarioConectado]._saldo > -10000 and (self._cuentas[self._usuarioConectado]._saldo - transferencia) > -10000:
+        if self._cuentas[usuario]._tipo == 'Cta cte comun':
+            if self._cuentas[usuario]._saldo > -10000 and (self._cuentas[usuario]._saldo - transferencia) > -10000:
                 print('-----------------------')
-                print(f'Se debitara de su cuenta el importe: {transferencia} destinado a la cuenta n°: {cuentaAtransferir}')
+                print(f'Se debitara de su cuenta el importe: {transferencia} destinado a la cuenta n°: {destino}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    transferido = self._cuentas[self._usuarioConectado]._saldo - transferencia
-                    self._cuentas[self._usuarioConectado]._saldo = transferido
+                    aTransferir = self._cuentas[usuario]._saldo - transferencia
+                    self._cuentas[usuario]._saldo = aTransferir
+                    self._cuentas[destino]._saldo += transferencia
                     print('-----------------------')
                     print('La transferencia se realizo con exito.')
                 else:
@@ -408,13 +406,14 @@ class Banco():
                 print('-----------------------')
                 print('No posee fondos suficientes para realizar la transferencia.')
 
-        elif self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros de saldo retenido' or self._cuentas[self._usuarioConectado]._tipo == 'Cta cte de saldo retenido':
-            if self._cuentas[self._usuarioConectado]._saldo > transferencia and (self._cuentas[self._usuarioConectado]._saldo - transferencia) >= 3000:
+        elif self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
+            if self._cuentas[usuario]._saldo > transferencia and (self._cuentas[usuario]._saldo - transferencia) >= 3000:
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    transferido = self._cuentas[self._usuarioConectado]._saldo - transferencia
-                    self._cuentas[self._usuarioConectado]._saldo = transferido
+                    aTransferir = self._cuentas[usuario]._saldo - transferencia
+                    self._cuentas[usuario]._saldo = aTransferir
+                    self._cuentas[destino]._saldo += transferencia
                     print('-----------------------')
                     print('La transferencia se realizo con exito.')
                 else:
@@ -434,17 +433,18 @@ class Banco():
 
 
     def pagoEnLinea(self):
+        usuario = self._usuarioConectado
         servicio = input('Ingrese el nombre del servicio que desea pagar: ')
         montoApagar = int(input('Ingrese el monto a pagar (numeros enteros sin coma): '))
-        if self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros de saldo retenido' or self._cuentas[self._usuarioConectado]._tipo == 'Cta cte de saldo retenido':
-            if self._cuentas[self._usuarioConectado]._saldo > montoApagar and (self._cuentas[self._usuarioConectado]._saldo - montoApagar) >= 3000:
+        if self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
+            if self._cuentas[usuario]._saldo > montoApagar and (self._cuentas[usuario]._saldo - montoApagar) >= 3000:
                 print('-----------------------')
                 print(f'Se debitara de su cuenta el importe: {montoApagar} en concepto de pago de: {servicio}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    pago = self._cuentas[self._usuarioConectado]._saldo - montoApagar
-                    self._cuentas[self._usuarioConectado]._saldo = pago
+                    pago = self._cuentas[usuario]._saldo - montoApagar
+                    self._cuentas[usuario]._saldo = pago
                     print('-----------------------')
                     print('El pago se realizo con exito.')
                 else:
@@ -453,15 +453,15 @@ class Banco():
             else:
                 print('-----------------------')
                 print('No posee fondos suficientes para realizar el pago.')
-        elif self._cuentas[self._usuarioConectado]._tipo == 'Caja de ahorros comun':
-            if self._cuentas[self._usuarioConectado]._saldo > montoApagar:
+        elif self._cuentas[usuario]._tipo == 'Caja de ahorros comun':
+            if self._cuentas[usuario]._saldo > montoApagar:
                 print('-----------------------')
                 print(f'Se debitara de su cuenta el importe: {montoApagar} en concepto de pago de: {servicio}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    pago = self._cuentas[self._usuarioConectado]._saldo - montoApagar
-                    self._cuentas[self._usuarioConectado]._saldo = pago
+                    pago = self._cuentas[usuario]._saldo - montoApagar
+                    self._cuentas[usuario]._saldo = pago
                     print('-----------------------')
                     print('El pago se realizo con exito.')
                 else:
@@ -470,15 +470,15 @@ class Banco():
             else:
                 print('-----------------------')
                 print('No posee fondos suficientes para realizar el pago.')
-        elif self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
-            if self._cuentas[self._usuarioConectado]._saldo > montoApagar and (self._cuentas[self._usuarioConectado]._saldo - montoApagar) >= -10000:
+        elif self._cuentas[usuario]._tipo == 'Cta cte comun':
+            if self._cuentas[usuario]._saldo > montoApagar and (self._cuentas[usuario]._saldo - montoApagar) >= -10000:
                 print('-----------------------')
                 print(f'Se debitara de su cuenta el importe: {montoApagar} en concepto de pago de: {servicio}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    pago = self._cuentas[self._usuarioConectado]._saldo - montoApagar
-                    self._cuentas[self._usuarioConectado]._saldo = pago
+                    pago = self._cuentas[usuario]._saldo - montoApagar
+                    self._cuentas[usuario]._saldo = pago
                     print('-----------------------')
                     print('El pago se realizo con exito.')
                 else:
@@ -552,19 +552,20 @@ class Banco():
 
     # Operacion validas solo para cta cte
     def compraMonedaExtranjera(self):
+        usuario = self._usuarioConectado
         print('Usted va a comprar moneda extranjera - Compra minima 100USD')
         montoAcomprar = int(input('Ingrese el monto que desea comprar: '))
         conversionDia = int(input('Ingrese el valor en pesos equivalente a 1 USD: '))
         montoMinimoUSD = 100
-        if self._cuentas[self._usuarioConectado]._tipo == 'Cta cte comun':
+        if self._cuentas[usuario]._tipo == 'Cta cte comun':
             conversion = montoAcomprar * conversionDia
-            if montoAcomprar >= montoMinimoUSD and self._cuentas[self._usuarioConectado]._saldo >= conversion:
+            if montoAcomprar >= montoMinimoUSD and self._cuentas[usuario]._saldo >= conversion:
                 print(f'Se debitara de su cuenta el importe: {conversion} destinado al cambio de divisas')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    saldoFinal = self._cuentas[self._usuarioConectado]._saldo - conversion
-                    self._cuentas[self._usuarioConectado]._saldo = saldoFinal
+                    saldoFinal = self._cuentas[usuario]._saldo - conversion
+                    self._cuentas[usuario]._saldo = saldoFinal
                     print('-------------')
                     print(f'La conversion se ha realizado con Exito. Compro {montoAcomprar} y se debitaron {conversion} de su cuenta')
                 
@@ -576,14 +577,15 @@ class Banco():
 
     # Operacion validas solo para cta cte
     def inversionBonos(self):
-        if self._usuarioConectado.rol == 'Cliente Pyme':
+        usuario = self._usuarioConectado
+        if usuario.rol == 'Cliente Pyme':
             print('Usted invertira en Bonos Argentinos - tenga en cuenta que 1 bono cotiza a 18 USD')
             cantidadBonos = int(input('Ingrese la cantidad de bonos a comprar para invertir: '))
             pesosAconvertir = cantidadBonos * 18
-            if self._cuentas[self._usuarioConectado]._saldo >= pesosAconvertir:
+            if self._cuentas[usuario]._saldo >= pesosAconvertir:
                 print(f'Se debitara de su cuenta el importe: {pesosAconvertir} destinado a la compra de bonos para operar.')
-                activosLiquidos = self._cuentas[self._usuarioConectado]._saldo - pesosAconvertir
-                self._cuentas[self._usuarioConectado]._saldo = activosLiquidos
+                activosLiquidos = self._cuentas[usuario]._saldo - pesosAconvertir
+                self._cuentas[usuario]._saldo = activosLiquidos
                 print('-------------')
                 print(f'La compra de bonos se ha realizado con Exito. Compro {cantidadBonos} y se debitaron {pesosAconvertir} de su cuenta')
             else:
@@ -594,17 +596,18 @@ class Banco():
 
     # Operacion validas solo para cta cte
     def pagoSueldos(self):
-        if self._usuarioConectado.rol == 'Cliente Pyme':
+        usuario = self._usuarioConectado
+        if usuario.rol == 'Cliente Pyme':
             print('Usted va a depositar los haberes a un empleado')
             pagoSueldo = int(input('Ingrese el monto a depositar: '))
             cbuCuentaDestino = int(input('Ingrese el cbu de la cuenta destino: '))
-            if self._cuentas[self._usuarioConectado]._saldo >= pagoSueldo:
+            if self._cuentas[usuario]._saldo >= pagoSueldo:
                 print(f'Se debitara de su cuenta el importe: {pagoSueldo} destinado al deposito del sueldo del empleado cbu: {cbuCuentaDestino}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    saldoRestante = self._cuentas[self._usuarioConectado]._saldo - pagoSueldo
-                    self._cuentas[self._usuarioConectado]._saldo = saldoRestante
+                    saldoRestante = self._cuentas[usuario]._saldo - pagoSueldo
+                    self._cuentas[usuario]._saldo = saldoRestante
                     print(f'Usted ha realizado el pago de haberes con exito. Su saldo restante es de {saldoRestante}')
                 else:
                     print('La operacion ha sido cancelada.')
@@ -618,7 +621,8 @@ class Banco():
     print('1. Crear Caja de ahorro')
 
     def crearCuenta(self):
-        if self._usuarioConectado.rol == 'Cliente Individuo':
+        usuario = self._usuarioConectado
+        if usuario.rol == 'Cliente Individuo':
             cuenta = False
             while cuenta == False:
                 print('1. Crear Caja de ahorro')
@@ -626,15 +630,16 @@ class Banco():
                 opcion = input('Ingrese la opcion deseada: ')
                 if opcion == '1':
                     sucursal = self._sucursal
+                    cbu = Secuencias.siguienteNroCbu()
+                    cta = Secuencias.siguienteNroCuenta()
                     fechaApertura = datetime.now()
                     saldo = 0
                     tipo = input('Elija si desea 1 cuenta COMUN o 2 cuenta de SALDO RETENIDO:')
                     if tipo == '1':
                         tipo = 'Caja de ahorros comun'
                         saldoRetenido = None
-                        cta = CajaDeAhorros(sucursal, fechaApertura, saldo, tipo, saldoRetenido)
-                        self._cuentas[self._usuarioConectado] = cta
-                        self._usuarioConectado.individuo._cuentas[self._usuarioConectado] = cta
+                        cta = CajaDeAhorros(sucursal, cbu, cta, fechaApertura, saldo, tipo, saldoRetenido)
+                        self._cuentas[usuario] = cta
                         print('-----------------------')
                         print('Su cuenta ah sido creada con exito. Gracias.')
                         self.menuOperacionesCliente()
@@ -643,9 +648,8 @@ class Banco():
                     else:
                         tipo = 'Caja de ahorros de saldo retenido'
                         saldoRetenido = 3000
-                        cta = CajaDeAhorros(sucursal, fechaApertura, saldo, tipo, saldoRetenido)
-                        self._cuentas[self._usuarioConectado] = cta
-                        self._usuarioConectado.individuo._cuentas[self._usuarioConectado] = cta
+                        cta = CajaDeAhorros(sucursal, cbu, cta, fechaApertura, saldo, tipo, saldoRetenido)
+                        self._cuentas[usuario] = cta
                         print('-----------------------')
                         print('Su cuenta ah sido creada con exito. Gracias.')
                         self.menuOperacionesCliente()
@@ -653,6 +657,8 @@ class Banco():
 
                 elif opcion == '2':
                     sucursal = self._sucursal
+                    cbu = Secuencias.siguienteNroCbu()
+                    cta = Secuencias.siguienteNroCuenta()
                     fechaApertura = datetime.now()
                     saldo = 0
                     tipo = input('Elija si desea 1 cuenta COMUN o 2 cuenta de SALDO RETENIDO:')
@@ -660,9 +666,8 @@ class Banco():
                         tipo = 'Cta cte comun'
                         saldoRetenido = None
                         descubierto = None
-                        cta = CtaCte(descubierto, sucursal, fechaApertura, saldo, tipo, saldoRetenido)
-                        self._cuentas[self._usuarioConectado] = cta
-                        self._usuarioConectado.individuo._cuentas[self._usuarioConectado] = cta
+                        cta = CtaCte(descubierto, sucursal, cbu, cta, fechaApertura, saldo, tipo, saldoRetenido)
+                        self._cuentas[usuario] = cta
                         print('-----------------------')
                         print('Su cuenta ah sido creada con exito. Gracias.')
                         self.menuOperacionesCliente()
@@ -683,6 +688,8 @@ class Banco():
         else:
             print('Crear cuenta corriente')
             sucursal = self._sucursal
+            cbu = Secuencias.siguienteNroCbu()
+            cta = Secuencias.siguienteNroCuenta()
             fechaApertura = datetime.now()
             saldo = 0
             tipo = input('Elija si desea 1 cuenta COMUN o 2 cuenta de SALDO RETENIDO:')
@@ -690,9 +697,8 @@ class Banco():
                 descubierto = 10000
                 tipo = 'Cta cte comun'
                 saldoRetenido = None
-                cta = CtaCte(descubierto, sucursal, fechaApertura, saldo, tipo, saldoRetenido)
-                self._cuentas[self._usuarioConectado] = cta
-                self._usuarioConectado.pyme._cuentas[self._usuarioConectado] = cta
+                cta = CtaCte(descubierto, sucursal, cbu, cta, fechaApertura, saldo, tipo, saldoRetenido)
+                self._cuentas[usuario] = cta
                 print('-----------------------')
                 print('Su cuenta ah sido creada con exito. Gracias.')
                 self.menuOperacionesCliente()
@@ -702,8 +708,7 @@ class Banco():
                 tipo = 'Cta cte de saldo retenido'
                 saldoRetenido = 3000
                 cta = CtaCte(descubierto, sucursal, fechaApertura, saldo, tipo, saldoRetenido)
-                self._cuentas[self._usuarioConectado] = cta
-                self._usuarioConectado.pyme._cuentas[self._usuarioConectado] = cta
+                self._cuentas[usuario] = cta
                 print('-----------------------')
                 print('Su cuenta ah sido creada con exito. Gracias.')
                 self.menuOperacionesCliente()
