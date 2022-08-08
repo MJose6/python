@@ -12,7 +12,6 @@ class Usuario:
     def getIdUs(self):
         return self._id
 
-
     @property
     def usuario(self):
         return  self._usuario
