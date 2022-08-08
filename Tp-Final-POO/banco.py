@@ -107,9 +107,59 @@ class Banco():
 
                 eleccion = input('Ingrese el numero de la operacion que desea realizar: ')
                 if eleccion == '1':
-                    pass
+                    modificacion = True
+                    while modificacion == True:
+                        print('1. mantenimiento mensual')
+                        print('1. transferencias')
+                        print('3. depositos')
+                        print('4. pagos en linea')
+                        print('5. salir')
+                        numero = int(input('Presione el numero de la opcion deseada: '))
+                        if numero == '1':
+                            self._costosCjaAhorros[mantenimiento] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '2':
+                            self._costosCjaAhorros[transferencias] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '3':
+                            self._costosCjaAhorros[depositos] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '4':
+                            self._costosCjaAhorros[pagosEnLinea] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '5':
+                            self.cargarCostosDeCuentas()
+                            modificacion = False
+                        else:
+                            print('El numero ingresado no es valido.')
+                            modificacion = True
                 elif eleccion == '2':
-                    pass
+                    modificacion = True
+                    while modificacion == True:
+                        print('1. mantenimiento mensual')
+                        print('1. transferencias')
+                        print('3. depositos')
+                        print('4. pagos en linea')
+                        print('5. salir')
+                        numero = int(input('Presione el numero de la opcion deseada: '))
+                        if numero == '1':
+                            self._costosCjaAhorros[mantenimiento] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '2':
+                            self._costosCjaAhorros[transferencias] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '3':
+                            self._costosCjaAhorros[depositos] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '4':
+                            self._costosCjaAhorros[pagosEnLinea] = int(input('Ingrese el costo: '))
+                            modificacion = True
+                        elif numero == '5':
+                            self.cargarCostosDeCuentas()
+                            modificacion = False
+                        else:
+                            print('El numero ingresado no es valido.')
+                            modificacion = True
                 elif eleccion == '3':
                     self.registrarCliente()
                 elif eleccion == '4':
@@ -327,14 +377,14 @@ class Banco():
                 self._cuentas[usuario]._saldo = deposito
                 print('-----------------------')
                 print(f' Acaba de depositar: {monto} y se le descontaran {costo} por costo de operacion.')
-            elif usuario in self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido':
+            elif usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido':
                 monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
                 print('-----------------------')
                 deposito = (self._cuentas[usuario]._saldo + monto)
                 self._cuentas[usuario]._saldo = deposito
                 print('-----------------------')
                 print(f' Acaba de depositar: {monto}')
-            elif usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte comun':
+            elif usuario in self._cuentas and self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte comun':
                 monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
                 print('-----------------------')
                 costo = self._costosCjaAhorros.get('depositos')
@@ -342,7 +392,7 @@ class Banco():
                 self._cuentas[usuario]._saldo = deposito
                 print('-----------------------')
                 print(f' Acaba de depositar: {monto} y se le descontaran {costo} por costo de operacion.')
-            elif usuario in self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
+            elif usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
                 monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
                 print('-----------------------')
                 deposito = (self._cuentas[usuario]._saldo + monto)
@@ -628,7 +678,7 @@ class Banco():
         montoAcomprar = int(input('Ingrese el monto que desea comprar: '))
         conversionDia = int(input('Ingrese el valor en pesos equivalente a 1 USD: '))
         montoMinimoUSD = 100
-        if self._cuentas[usuario]._tipo == 'Cta cte comun':
+        if self._cuentas[usuario]._tipo == 'Cta cte comun' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
             conversion = montoAcomprar * conversionDia
             if montoAcomprar >= montoMinimoUSD and self._cuentas[usuario]._saldo >= conversion:
                 print(f'Se debitara de su cuenta el importe: {conversion} destinado al cambio de divisas')
@@ -689,7 +739,6 @@ class Banco():
             print('--------')
             print('Usted no es Cliente Pyme. No puede continuar con la operacion.')
 
-    print('1. Crear Caja de ahorro')
 
     def crearCuenta(self):
         usuario = self._usuarioConectado
@@ -799,29 +848,37 @@ class Banco():
                 eleccion = input('Presione 1 para ingresar como administrador, 2 para ingresar como cliente: ')
                 if eleccion == '1':
                     if self._usuarioConectado.rol == 'Administrador':
-                        operacion = input('Para registrar cliente presione 1, para cargar datos presione 2: ')
+                        operacion = input('Para registrar cliente presione 1 \n para cargar datos presione 2 \n para crear una cuenta presione 3: ')
                         if operacion == '1':
                             self.registrarCliente()
-                        else:
+                        elif operacion == '2':
                             self.cargarCostosDeCuentas()
+                        elif operacion == '3':
+                            self.crearCuenta()
+                        else:
+                            print('El numero ingresado no es valido.')
                     elif self._usuarioConectado.rol == 'Cliente Pyme' or self._usuarioConectado.rol == 'Cliente Individuo':
                         print('-----------------------')
                         print('Usted no es administrador, es cliente o no se encuentra registrado')
                         print('El ingreso fallo, intentelo nuevamente.')
                         self.logIn()
                 elif eleccion == '2':
-                    print('-----------------------')
-                    print('Ingreso como cliente')
-                    if self._conexion == True:
-                        eleccion = input('Si desea crear una cuenta presione 1, si ya posee una cuenta presione 2: ')
-                        if eleccion == '1':
-                            self.crearCuenta()
-                        elif eleccion == '2':
-                            for key, value in self._clientes.items():
-                                if self._usuarioConectado == value:
-                                    self.menuOperacionesCliente()
-                        else:
-                            print('Ingreso una opcion no válida')
+                    if self._usuarioConectado.rol == 'Cliente Individuo' or self._usuarioConectado.rol == 'Cliente Pyme':
+                        print('-----------------------')
+                        print('Ingreso como cliente')
+                        if self._conexion == True:
+                            eleccion = input('Si desea crear una cuenta presione 1, si ya posee una cuenta presione 2: ')
+                            if eleccion == '1':
+                                self.crearCuenta()
+                            elif eleccion == '2':
+                                for key, value in self._clientes.items():
+                                    if self._usuarioConectado == value:
+                                        self.menuOperacionesCliente()
+                            else:
+                                print('Ingreso una opcion no válida')
+                    else:
+                        print('Usted no es cliente, vuelva a intentarlo.')
+                        self.logIn()
         else:
             self._intentos += 1
             if self._intentos <= 2:
