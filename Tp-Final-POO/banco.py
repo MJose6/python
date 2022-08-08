@@ -99,6 +99,7 @@ class Banco():
         operacion = False
         if usuario.rol == 'Administrador':
             while operacion == False:
+                print('----------------------')
                 print('1. Cargar o Modificar costos en Caja de Ahorros')
                 print('2. Cargar o Modificar costos en Cuenta Corriente')
                 print('3. Registrar un cliente')
@@ -114,18 +115,18 @@ class Banco():
                         print('3. depositos')
                         print('4. pagos en linea')
                         print('5. salir')
-                        numero = int(input('Presione el numero de la opcion deseada: '))
+                        numero = input('Presione el numero de la opcion deseada: ')
                         if numero == '1':
-                            self._costosCjaAhorros[mantenimiento] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['mantenimiento'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '2':
-                            self._costosCjaAhorros[transferencias] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['transferencias'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '3':
-                            self._costosCjaAhorros[depositos] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['depositos'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '4':
-                            self._costosCjaAhorros[pagosEnLinea] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['pagosEnLinea'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '5':
                             self.cargarCostosDeCuentas()
@@ -141,18 +142,18 @@ class Banco():
                         print('3. depositos')
                         print('4. pagos en linea')
                         print('5. salir')
-                        numero = int(input('Presione el numero de la opcion deseada: '))
+                        numero = input('Presione el numero de la opcion deseada: ')
                         if numero == '1':
-                            self._costosCjaAhorros[mantenimiento] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['mantenimiento'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '2':
-                            self._costosCjaAhorros[transferencias] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['transferencias'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '3':
-                            self._costosCjaAhorros[depositos] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['depositos'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '4':
-                            self._costosCjaAhorros[pagosEnLinea] = int(input('Ingrese el costo: '))
+                            self._costosCjaAhorros['pagosEnLinea'] = int(input('Ingrese el costo: '))
                             modificacion = True
                         elif numero == '5':
                             self.cargarCostosDeCuentas()
