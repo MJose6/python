@@ -17,6 +17,10 @@ class Banco():
         self._cuentas = {}
         self._servicios = {}
         self._operaciones = {}
+        self._costosCjaAhorros = {'mantenimiento' : 200, 'transferencias' : 5, 'depositos' : 5, 'pagosEnLinea' : 3}
+        self._costosCjaSR = {'mantenimiento' : 0, 'transferencias' : 0, 'depositos' : 0, 'pagosEnLinea' : 0}
+        self._costosCtaCte = {'mantenimiento' : 500, 'transferencias' : 5, 'depositos' : 5, 'pagosEnLinea' : 3}
+        self._costosCtaSR = {'mantenimiento' : 0, 'transferencias' : 0, 'depositos' : 0, 'pagosEnLinea' : 0}
         self._intentos = 0
         self._usuarioConectado = None
         self.cargarDatosIniciales()
@@ -91,7 +95,32 @@ class Banco():
 
     #metodos utilizado solo por el administrador
     def cargarCostosDeCuentas(self):
-        pass
+        usuario = self._usuarioConectado
+        operacion = False
+        if usuario.rol == 'Administrador':
+            while operacion == False:
+                print('1. Cargar o Modificar costos en Caja de Ahorros')
+                print('2. Cargar o Modificar costos en Cuenta Corriente')
+                print('3. Registrar un cliente')
+                print('4. Registrar una cuenta')
+                print('5. Salir')
+
+                eleccion = input('Ingrese el numero de la operacion que desea realizar: ')
+                if eleccion == '1':
+                    pass
+                elif eleccion == '2':
+                    pass
+                elif eleccion == '3':
+                    self.registrarCliente()
+                elif eleccion == '4':
+                    self.crearCuenta()
+                elif eleccion == '5':
+                    self.logOut()
+                    operacion = True
+                    self.logIn()
+                else:
+                    print('El numero elegido es incorrecto, vuelva a intentarlo')
+                    operacion = False
 
 
 
@@ -178,9 +207,12 @@ class Banco():
                             self.logOut()
                             operacion = True
                             self.logIn()
+                        else:
+                            print('El numero ingresado es incorrecto vuelva a intentarlo.')
+                            operacion = False
                 else:
                     print('-----------------------')
-                    print('Usted no posee una caja de ahorros.')
+                    print('Usted no posee una caja de ahorros o ingreso un numero incorrecto, por favos vuelva a intentarlo.')
                     self.menuOperacionesCliente()
             else:
                 if usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte comun' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
@@ -224,7 +256,9 @@ class Banco():
                             self.logOut()
                             operacion = True
                             self.logIn()
-
+                        else:
+                            print('El numero ingresado es incorrecto vuelva a intentarlo.')
+                            operacion = False
 
         elif usuario.rol == 'Cliente Pyme':
             if usuario in self._cuentas:
@@ -276,25 +310,61 @@ class Banco():
                         self.logOut()
                         operacion = True
                         self.logIn()
+                    else:
+                        print('El numero ingresado es incorrecto vuelva a intentarlo.')
+                        operacion = False
 
 
     #Operaciones validas para caja de ahorros y cta cte
     def depositar(self):
         usuario = self._usuarioConectado
         if usuario.rol == 'Cliente Individuo':
-            monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
-            print('-----------------------')
-            deposito = self._cuentas[usuario]._saldo + monto
-            self._cuentas[usuario]._saldo = deposito
-            print('-----------------------')
-            print(f' Acaba de depositar: {monto} ')
+            if usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Caja de ahorros comun':
+                monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
+                print('-----------------------')
+                costo = self._costosCjaAhorros.get('depositos')
+                deposito = (self._cuentas[usuario]._saldo + monto) - costo
+                self._cuentas[usuario]._saldo = deposito
+                print('-----------------------')
+                print(f' Acaba de depositar: {monto} y se le descontaran {costo} por costo de operacion.')
+            elif usuario in self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido':
+                monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
+                print('-----------------------')
+                deposito = (self._cuentas[usuario]._saldo + monto)
+                self._cuentas[usuario]._saldo = deposito
+                print('-----------------------')
+                print(f' Acaba de depositar: {monto}')
+            elif usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte comun':
+                monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
+                print('-----------------------')
+                costo = self._costosCjaAhorros.get('depositos')
+                deposito = (self._cuentas[usuario]._saldo + monto) - costo
+                self._cuentas[usuario]._saldo = deposito
+                print('-----------------------')
+                print(f' Acaba de depositar: {monto} y se le descontaran {costo} por costo de operacion.')
+            elif usuario in self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
+                monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
+                print('-----------------------')
+                deposito = (self._cuentas[usuario]._saldo + monto)
+                self._cuentas[usuario]._saldo = deposito
+                print('-----------------------')
+                print(f' Acaba de depositar: {monto}')
         elif usuario.rol == 'Cliente Pyme':
-            monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
-            print('-----------------------')
-            deposito = self._cuentas[usuario]._saldo + monto
-            self._cuentas[usuario]._saldo = deposito
-            print('-----------------------')
-            print(f' Acaba de depositar: {monto} ')
+            if usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte comun':
+                monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
+                print('-----------------------')
+                costo = self._costosCjaAhorros.get('depositos')
+                deposito = (self._cuentas[usuario]._saldo + monto) - costo
+                self._cuentas[usuario]._saldo = deposito
+                print('-----------------------')
+                print(f' Acaba de depositar: {monto} y se le descontaran {costo} por costo de operacion.')
+            elif usuario in self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
+                monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
+                print('-----------------------')
+                deposito = (self._cuentas[usuario]._saldo + monto)
+                self._cuentas[usuario]._saldo = deposito
+                print('-----------------------')
+                print(f' Acaba de depositar: {monto}')
 
 
 
@@ -366,16 +436,15 @@ class Banco():
                 if cbu == key:
                     destino = value
             print(f'Esta a punto de transferir: {transferencia} a {destino}')
-
-
             if self._cuentas[usuario]._tipo == 'Caja de ahorros comun':
-                if self._cuentas[usuario]._saldo > transferencia:
+                costo = self._costosCjaAhorros.get('transferencias')
+                if self._cuentas[usuario]._saldo > (transferencia + costo):
                     print('-----------------------')
                     print(f'Se debitara de su cuenta el importe: {transferencia} destinado a la cuenta n°: {cbu}')
                     confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                     confirmacion = confirmacion.upper()
                     if confirmacion == 'SI':
-                        aTransferir = self._cuentas[usuario]._saldo - transferencia
+                        aTransferir = self._cuentas[usuario]._saldo - (transferencia + costo)
                         self._cuentas[usuario]._saldo = aTransferir
                         self._cuentas[destino]._saldo += transferencia
                         print('-----------------------')
@@ -388,13 +457,14 @@ class Banco():
                     print('No posee fondos suficientes para realizar la transferencia.')
 
         if self._cuentas[usuario]._tipo == 'Cta cte comun':
-            if self._cuentas[usuario]._saldo > -10000 and (self._cuentas[usuario]._saldo - transferencia) > -10000:
+            costo = self._costosCtaCte.get('transferencias')
+            if self._cuentas[usuario]._saldo - (transferencia + costo) > -10000:
                 print('-----------------------')
                 print(f'Se debitara de su cuenta el importe: {transferencia} destinado a la cuenta n°: {destino}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    aTransferir = self._cuentas[usuario]._saldo - transferencia
+                    aTransferir = self._cuentas[usuario]._saldo - (transferencia + costo)
                     self._cuentas[usuario]._saldo = aTransferir
                     self._cuentas[destino]._saldo += transferencia
                     print('-----------------------')
@@ -433,6 +503,7 @@ class Banco():
 
 
     def pagoEnLinea(self):
+        costo = self._costosCtaCte.get('pagosEnLinea')
         usuario = self._usuarioConectado
         servicio = input('Ingrese el nombre del servicio que desea pagar: ')
         montoApagar = int(input('Ingrese el monto a pagar (numeros enteros sin coma): '))
@@ -456,11 +527,11 @@ class Banco():
         elif self._cuentas[usuario]._tipo == 'Caja de ahorros comun':
             if self._cuentas[usuario]._saldo > montoApagar:
                 print('-----------------------')
-                print(f'Se debitara de su cuenta el importe: {montoApagar} en concepto de pago de: {servicio}')
+                print(f'Se debitara de su cuenta el importe: {montoApagar} mas costos de operacion {costo} en concepto de pago de: {servicio}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    pago = self._cuentas[usuario]._saldo - montoApagar
+                    pago = self._cuentas[usuario]._saldo - (montoApagar + costo)
                     self._cuentas[usuario]._saldo = pago
                     print('-----------------------')
                     print('El pago se realizo con exito.')
@@ -473,11 +544,11 @@ class Banco():
         elif self._cuentas[usuario]._tipo == 'Cta cte comun':
             if self._cuentas[usuario]._saldo > montoApagar and (self._cuentas[usuario]._saldo - montoApagar) >= -10000:
                 print('-----------------------')
-                print(f'Se debitara de su cuenta el importe: {montoApagar} en concepto de pago de: {servicio}')
+                print(f'Se debitara de su cuenta el importe: {montoApagar} mas costos de operacion {costo} en concepto de pago de: {servicio}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
-                    pago = self._cuentas[usuario]._saldo - montoApagar
+                    pago = self._cuentas[usuario]._saldo - (montoApagar + costo)
                     self._cuentas[usuario]._saldo = pago
                     print('-----------------------')
                     print('El pago se realizo con exito.')
