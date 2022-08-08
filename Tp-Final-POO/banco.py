@@ -20,6 +20,7 @@ class Banco():
         self._costosCjaSR = {'mantenimiento' : 0, 'transferencias' : 0, 'depositos' : 0, 'pagosEnLinea' : 0}
         self._costosCtaCte = {'mantenimiento' : 500, 'transferencias' : 5, 'depositos' : 5, 'pagosEnLinea' : 3}
         self._costosCtaSR = {'mantenimiento' : 0, 'transferencias' : 0, 'depositos' : 0, 'pagosEnLinea' : 0}
+        self._tipoCambio = 200
         self._intentos = 0
         self._usuarioConectado = None
         self.cargarDatosIniciales()
@@ -490,10 +491,12 @@ class Banco():
         usuario = self._usuarioConectado
         cbu = int(input('Ingrese el numero de CBU/CVU a donde desea hacer la transferencia: '))
         transferencia = int(input('Ingrese el monto que desea transferir (numeros enteros sin coma): '))
+        #se almacenan datos del beneficiario para el usuario
         if cbu in self._datosCli:
             for key, value in self._datosCli.items():
                 if cbu == key:
                     destino = value
+        #se almacenan datos del beneficiario para el banco
         if cbu in self._clientes:
             for key, value in self._clientes.items():
                 if cbu == key:
@@ -522,7 +525,6 @@ class Banco():
             costo = self._costosCtaCte.get('transferencias')
             if self._cuentas[usuario]._saldo - (transferencia + costo) > -10000:
                 print('-----------------------')
-                print(f'Esta a punto de transferir: {transferencia} pesos al {destino}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
@@ -540,7 +542,6 @@ class Banco():
 
         elif self._cuentas[usuario]._tipo == 'Caja de ahorros de saldo retenido' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
             if (self._cuentas[usuario]._saldo - transferencia) >= 3000:
-                print(f'Esta a punto de transferir: {transferencia} pesos al {destino}')
                 confirmacion = input('Ingrese SI para confirmar o NO para cancelar: ')
                 confirmacion = confirmacion.upper()
                 if confirmacion == 'SI':
@@ -693,8 +694,8 @@ class Banco():
     def compraMonedaExtranjera(self):
         usuario = self._usuarioConectado
         print('Usted va a comprar moneda extranjera - Compra minima 100USD')
-        montoAcomprar = int(input('Ingrese el monto que desea comprar: '))
-        conversionDia = int(input('Ingrese el valor en pesos equivalente a 1 USD: '))
+        montoAcomprar = int(input('Ingrese el monto que desea comprar en USD: '))
+        conversionDia = self._tipoCambio
         montoMinimoUSD = 100
         if self._cuentas[usuario]._tipo == 'Cta cte comun' or self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
             conversion = montoAcomprar * conversionDia
