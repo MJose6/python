@@ -417,7 +417,7 @@ class Banco():
                 self._cuentas[usuario]._saldo = deposito
                 print('-----------------------')
                 print(f' Acaba de depositar: {monto} y se le descontaran {costo} por costo de operacion.')
-            elif usuario in self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
+            elif usuario in self._cuentas and self._cuentas[usuario]._tipo == 'Cta cte de saldo retenido':
                 monto = int(input('Ingrese el monto que desea depositar (numeros enteros sin coma): '))
                 print('-----------------------')
                 deposito = (self._cuentas[usuario]._saldo + monto)
@@ -494,6 +494,10 @@ class Banco():
             for key, value in self._datosCli.items():
                 if cbu == key:
                     destino = value
+        if cbu in self._clientes:
+            for key, value in self._clientes.items():
+                if cbu == key:
+                    beneficiario = value
             print(f'Esta a punto de transferir: {transferencia} pesos al {destino}')
             if self._cuentas[usuario]._tipo == 'Caja de ahorros comun':
                 costo = self._costosCjaAhorros.get('transferencias')
@@ -504,7 +508,7 @@ class Banco():
                     if confirmacion == 'SI':
                         aTransferir = self._cuentas[usuario]._saldo - (transferencia + costo)
                         self._cuentas[usuario]._saldo = aTransferir
-                        self._cuentas[destino]._saldo += transferencia
+                        self._cuentas[beneficiario]._saldo += transferencia
                         print('-----------------------')
                         print('La transferencia se realizo con exito.')
                     else:
@@ -524,7 +528,7 @@ class Banco():
                 if confirmacion == 'SI':
                     aTransferir = self._cuentas[usuario]._saldo - (transferencia + costo)
                     self._cuentas[usuario]._saldo = aTransferir
-                    self._cuentas[destino]._saldo += transferencia
+                    self._cuentas[beneficiario]._saldo += transferencia
                     print('-----------------------')
                     print('La transferencia se realizo con exito.')
                 else:
@@ -542,7 +546,7 @@ class Banco():
                 if confirmacion == 'SI':
                     aTransferir = self._cuentas[usuario]._saldo - transferencia
                     self._cuentas[usuario]._saldo = aTransferir
-                    self._cuentas[destino]._saldo += transferencia
+                    self._cuentas[beneficiario]._saldo += transferencia
                     print('-----------------------')
                     print('La transferencia se realizo con exito.')
                 else:

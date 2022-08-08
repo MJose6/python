@@ -40,4 +40,4 @@ class Pyme(Cliente):
 
 
     def __str__(self):
-        return f'Cliente {self.getId()} : {self._razonSocial} - {self._cuit} - {self._mail} - {self._direccion} - {self._telefono}'
+        return f'Cliente : {self._razonSocial} - {self._cuit} - {self._direccion}'
